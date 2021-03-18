@@ -60,14 +60,9 @@ for i in range(0, 3):
     arp.icv = struct.unpack('!L', mes[-4:])[0]
     # Remove the RadioTap value of the length of the packet to recalculate it
     arp[RadioTap].len = None
-    # If this is the last part ot the message in our case the third round we disable the More Fragment flag
-    if i == 2:
-        arp.FCfield = int.from_bytes(b'\x08\x41', "big")
-    else:
-        # Change the field Frame Control Field. Keep the first 2 Bytes unchanged 0x08.
-        # Then use the value 0x45 that will keep the default bits of the template active
-        # but will activate the third bit that is the bit for the More fragments flag
-        arp.FCfield = int.from_bytes(b'\x08\x45', "big")
+    # If this is the last part ot the message in our case the third round we disable the More Fragment flag otherwise
+    # we enable the bit
+    arp.FCfield.MF = i < 2
     # As i will start at 0 it will follow the value of the SC (counter of fragments
     arp.SC = i
     # To delete the content of arp3.cap if the file exists
