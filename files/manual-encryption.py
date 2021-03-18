@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-""" Manually decrypt a wep message given the WEP key"""
+""" Manually encrypt a wep message given the WEP key"""
 
 __author__      = "Robin Müller and Stéphane Teixeira Carvalho"
 __copyright__   = "Copyright 2017, HEIG-VD"
@@ -10,7 +10,6 @@ __version__ 	= "1.0"
 __status__ 		= "Prototype"
 
 from scapy.all import *
-import binascii
 from rc4 import RC4
 import zlib
 
@@ -46,4 +45,5 @@ arp.iv = IV
 # Add the ICV to our packet as said before we send the cipher ICV so the four last bytes of our cypher text
 arp.icv = struct.unpack('!L', ciphertext[-4:])[0]
 
-wrpcap('arp2.cap', arp, append=False)  #
+# Write the arp packet encrypted in the wireshark file
+wrpcap('arp2.cap', arp, append=False)

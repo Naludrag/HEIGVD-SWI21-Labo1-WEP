@@ -8,7 +8,12 @@
 
 ## Laboratoire 802.11 Sécurité WEP
 
-__A faire en équipes de deux personnes__
+***Auteur: Robin Müller, Stéphane Teixeira Carvalho***
+
+<span class="float-left text-red tooltipped tooltipped-n" aria-label="Does not meet accessibility standards"><%= octicon("alert") %></span>
+<div class="text-red mb-2 ml-4">
+Les captures d'écran se situent dans le dossier screenshots.
+</div>
 
 ### Pour cette partie pratique, vous devez être capable de :
 
