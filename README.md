@@ -10,10 +10,7 @@
 
 ***Auteur: Robin Müller, Stéphane Teixeira Carvalho***
 
-<span class="float-left text-red tooltipped tooltipped-n" aria-label="Does not meet accessibility standards"><%= octicon("alert") %></span>
-<div class="text-red mb-2 ml-4">
-Les captures d'écran se situent dans le dossier screenshots.
-</div>
+**Les captures d'écran se situent dans le dossier screenshots.**
 
 ### Pour cette partie pratique, vous devez être capable de :
 
