@@ -14,23 +14,33 @@ from rc4 import RC4
 import zlib
 from scapy.layers.dot11 import RadioTap
 
-
 def get_icv(message):
     """
-      Get the ICV of a given message
+      Calculate the ICV of a given message
     """
     icv = zlib.crc32(message)
     return icv.to_bytes(4, byteorder='little')
 
 
+def fragment(msg, n):
+    """
+      Yield n fragments from message.
+    """
+    chunkLen = len(msg) // n
+    for i in range(0, len(msg), chunkLen):
+        yield msg[i:i + chunkLen]
+
+# The number of fragments (w/ the current message, possible values are 1, 2, 3, 4)
+NB_FRAGMENTS = 3
+
 # Cle wep AA:AA:AA:AA:AA
 key = b'\xaa\xaa\xaa\xaa\xaa'
-# Message that will be fragmentated. We choose to use the ARP packet from the example
+# Message that will be fragmentated. We chose to use the ARP packet from the example
 message = b'\xaa\xaa\x03\x00\x00\x00\x08\x06\x00\x01\x08\x00\x06\x04\x00\x01\x90\x27\xe4\xea\x61\xf2\xc0\xa8\x01\x64\x00\x00\x00\x00\x00\x00\xc0\xa8\x01\xc8'
 # Choosen IV for RC4 in our case the IV 0
 IV = b'\x00\x00\x00'
 
-# Send the rc4 seed composed by the IV and the key
+# Initialize RC4 with the seed that is composed of the IV and the key
 seed = IV + key
 cipher = RC4(seed, streaming=False)
 
@@ -38,15 +48,9 @@ cipher = RC4(seed, streaming=False)
 arp = rdpcap('arp.cap')[0]
 
 """ Send the fragments """
-for i in range(0, 3):
-    # Slice the message in 3 parts here we will take the first part of it
-    msg = message[:len(message) // 3]
-    # In the second round take the second part of the message
-    if i == 1:
-        msg = message[len(message) // 3:len(message) // 3 * 2]
-    # In the third round take the third part of the message
-    elif i == 2:
-        msg = message[len(message) // 3 * 2:]
+fragments = list(fragment(message, NB_FRAGMENTS))
+for i in range(0, NB_FRAGMENTS): # Fragment the message
+    msg = fragments[i]
     # Calculate the icv with CRC
     icv = get_icv(msg)
     # Encrypt the message and the ICV
@@ -62,8 +66,8 @@ for i in range(0, 3):
     arp[RadioTap].len = None
     # If this is the last part ot the message in our case the third round we disable the More Fragment flag otherwise
     # we enable the bit
-    arp.FCfield.MF = i < 2
-    # As i will start at 0 it will follow the value of the SC (counter of fragments
+    arp.FCfield.MF = i < (NB_FRAGMENTS - 1)
+    # As i will start at 0 it will follow the value of the SC (counter of fragments)
     arp.SC = i
     # To delete the content of arp3.cap if the file exists
     if i == 0:

@@ -16,7 +16,7 @@ import zlib
 
 def get_icv(msg):
     """
-      Get the ICV of a given message
+      Calculate the ICV of a given message
     """
     icv = zlib.crc32(msg)
     return icv.to_bytes(4, byteorder='little')
@@ -24,7 +24,7 @@ def get_icv(msg):
 
 # Cle wep AA:AA:AA:AA:AA
 key = b'\xaa\xaa\xaa\xaa\xaa'
-# Message that will be sent
+# Message that will be sent (ARP Who has 192.168.1.200? Tell 192.168.1.100)
 message = b'\xaa\xaa\x03\x00\x00\x00\x08\x06\x00\x01\x08\x00\x06\x04\x00\x01\x90\x27\xe4\xea\x61\xf2\xc0\xa8\x01\x64\x00\x00\x00\x00\x00\x00\xc0\xa8\x01\xc8'
 # IV that we set at 0 in our case
 IV = b'\x00\x00\x00'
@@ -33,7 +33,7 @@ IV = b'\x00\x00\x00'
 seed = IV+key
 # Initialize the RC4 cipher with the seed
 cipher = RC4(seed, streaming=False)
-# Crypt the message and the icv using the crypt method of RC4
+# Encrypt the message and the icv using the encrypt method of RC4
 ciphertext = cipher.crypt(message + get_icv(message))
 
 # Read the current packet in the wireshark capture to get a template structure
