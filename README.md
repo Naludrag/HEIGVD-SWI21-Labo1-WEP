@@ -10,8 +10,6 @@
 
 ***Auteur: Robin Müller, Stéphane Teixeira Carvalho***
 
-**Les captures d'écran se situent dans le dossier screenshots.**
-
 ### Pour cette partie pratique, vous devez être capable de :
 
 * Déchiffrer manuellement des trames WEP utilisant Python et Scapy
@@ -19,7 +17,7 @@
 * Forger des fragments protégés avec WEP afin d’obtenir une keystream de longueur plus grande que 8 octets
 
 
-Vous allez devoir faire des recherches sur internet pour apprendre à utiliser Scapy. __Il est fortement conseillé d'employer une distribution Kali__ (on ne pourra pas assurer le support avec d'autres distributions). 
+Vous allez devoir faire des recherches sur internet pour apprendre à utiliser Scapy. __Il est fortement conseillé d'employer une distribution Kali__ (on ne pourra pas assurer le support avec d'autres distributions).
 
 
 ## Travail à réaliser
@@ -29,13 +27,13 @@ Vous allez devoir faire des recherches sur internet pour apprendre à utiliser S
 Dans cette partie, vous allez récupérer le script Python [manual-decryption.py](files/manual-decryption.py). Il vous faudra également le fichier de capture [arp.cap](files/arp.cap) contenant un message arp chiffré avec WEP et la librairie [rc4.py](files/rc4.py) pour générer les keystreams indispensables pour chiffrer/déchiffrer WEP. Tous les fichiers doivent être copiés dans le même répertoire local sur vos machines.
 
 - Ouvrir le fichier de capture [arp.cap](files/arp.cap) avec Wireshark
-   
+
 - Utiliser Wireshark pour déchiffrer la capture. Pour cela, il faut configurer dans Wireshark la clé de chiffrement/déchiffrement WEP (Dans Wireshark : Preferences&rarr;Protocols&rarr;IEEE 802.11&rarr;Decryption Keys). Il faut également activer le déchiffrement dans la fenêtre IEEE 802.11 (« Enable decryption »). Vous trouverez la clé dans le script Python [manual-decryption.py](files/manual-decryption.py).
-   
+
 - Exécuter le script avec `python manual-decryption.py`
-   
+
 - Comparer la sortie du script avec la capture text déchiffrée par Wireshark
-   
+
 - Analyser le fonctionnement du script
 
 ### 2. Chiffrement manuel de WEP
@@ -76,7 +74,7 @@ Un fork du repo original . Puis, un Pull Request contenant :
   - Capture d’écran de votre trame importée et déchiffré par Wireshark
 -	Script de fragmentation **abondamment commenté/documenté**
   - Fichier pcap généré par votre script contenant les fragments
-  - Capture d’écran de vos trames importées et déchiffrés par Wireshark 
+  - Capture d’écran de vos trames importées et déchiffrés par Wireshark
 
 -	Envoyer le hash du commit et votre username GitHub par email au professeur et à l'assistant
 
