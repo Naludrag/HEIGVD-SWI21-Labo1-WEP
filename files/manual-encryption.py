@@ -46,4 +46,4 @@ arp.iv = IV
 arp.icv = struct.unpack('!L', ciphertext[-4:])[0]
 
 # Write the arp packet encrypted in the wireshark file
-wrpcap('arp2.cap', arp, append=False)
+wrpcap('arp-manual-encryption.cap', arp, append=False)

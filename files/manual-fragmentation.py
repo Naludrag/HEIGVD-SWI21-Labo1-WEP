@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-""" Manually decrypt a wep message given the WEP key"""
+""" Manually fragment a wep message and encrypt it with a given WEP key"""
 
 __author__ = "Robin Müller and Stéphane Teixeira Carvalho"
 __copyright__ = "Copyright 2017, HEIG-VD"
@@ -13,6 +13,7 @@ from scapy.all import *
 from rc4 import RC4
 import zlib
 from scapy.layers.dot11 import RadioTap
+
 
 def get_icv(message):
     """
@@ -30,6 +31,7 @@ def fragment(msg, n):
     for i in range(0, len(msg), chunkLen):
         yield msg[i:i + chunkLen]
 
+
 # The number of fragments (w/ the current message, possible values are 1, 2, 3, 4)
 NB_FRAGMENTS = 3
 
@@ -37,7 +39,7 @@ NB_FRAGMENTS = 3
 key = b'\xaa\xaa\xaa\xaa\xaa'
 # Message that will be fragmentated. We chose to use the ARP packet from the example
 message = b'\xaa\xaa\x03\x00\x00\x00\x08\x06\x00\x01\x08\x00\x06\x04\x00\x01\x90\x27\xe4\xea\x61\xf2\xc0\xa8\x01\x64\x00\x00\x00\x00\x00\x00\xc0\xa8\x01\xc8'
-# Choosen IV for RC4 in our case the IV 0
+# Chosen IV for RC4 in our case the IV 0
 IV = b'\x00\x00\x00'
 
 # Initialize RC4 with the seed that is composed of the IV and the key
@@ -49,7 +51,7 @@ arp = rdpcap('arp.cap')[0]
 
 """ Send the fragments """
 fragments = list(fragment(message, NB_FRAGMENTS))
-for i in range(0, NB_FRAGMENTS): # Fragment the message
+for i in range(0, NB_FRAGMENTS):  # Fragment the message
     msg = fragments[i]
     # Calculate the icv with CRC
     icv = get_icv(msg)
@@ -69,8 +71,8 @@ for i in range(0, NB_FRAGMENTS): # Fragment the message
     arp.FCfield.MF = i < (NB_FRAGMENTS - 1)
     # As i will start at 0 it will follow the value of the SC (counter of fragments)
     arp.SC = i
-    # To delete the content of arp3.cap if the file exists
+    # To delete the content of arp-manual-fragmentation.cap if the file exists
     if i == 0:
-        wrpcap('arp3.cap', arp, append=False)
+        wrpcap('arp-manual-fragmentation.cap', arp, append=False)
     else:
-        wrpcap('arp3.cap', arp, append=True)
+        wrpcap('arp-manual-fragmentation.cap', arp, append=True)
