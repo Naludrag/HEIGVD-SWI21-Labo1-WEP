@@ -4,7 +4,7 @@
 """ Manually fragment a wep message and encrypt it with a given WEP key"""
 
 __author__ = "Robin Müller and Stéphane Teixeira Carvalho"
-__copyright__ = "Copyright 2017, HEIG-VD"
+__copyright__ = "Copyright 2021, HEIG-VD"
 __license__ = "GPL"
 __version__ = "1.0"
 __status__ = "Prototype"
@@ -15,11 +15,11 @@ import zlib
 from scapy.layers.dot11 import RadioTap
 
 
-def get_icv(message):
+def get_icv(msg):
     """
       Calculate the ICV of a given message
     """
-    icv = zlib.crc32(message)
+    icv = zlib.crc32(msg)
     return icv.to_bytes(4, byteorder='little')
 
 
@@ -64,7 +64,8 @@ for i in range(0, NB_FRAGMENTS):  # Fragment the message
     # Put the ICV in the packet. The ICV is in the last four bytes of the encrypted message.
     # The value is also put in a little endian way to be readable
     arp.icv = struct.unpack('!L', mes[-4:])[0]
-    # Remove the RadioTap value of the length of the packet to recalculate it
+    # Remove the RadioTap value of the length of the packet to recalculate it. If not use the packet will keep
+    # the value len of the template and wireshark will not succeed to read the fragment
     arp[RadioTap].len = None
     # If this is the last part ot the message in our case the third round we disable the More Fragment flag otherwise
     # we enable the bit
