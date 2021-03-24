@@ -47,3 +47,6 @@ arp.icv = struct.unpack('!L', ciphertext[-4:])[0]
 
 # Write the arp packet encrypted in the wireshark file
 wrpcap('arp-manual-encryption.cap', arp, append=False)
+
+print('Text: ' + message.hex())
+print('Ciphertext: ' + ciphertext[:-4].hex())

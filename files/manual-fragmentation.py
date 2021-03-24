@@ -56,14 +56,14 @@ for i in range(0, NB_FRAGMENTS):  # Fragment the message
     # Calculate the icv with CRC
     icv = get_icv(msg)
     # Encrypt the message and the ICV
-    mes = cipher.crypt(msg + icv)
+    ciphertext = cipher.crypt(msg + icv)
     # Put the encrypted data in the wepdata of the packet. Remove the last 4 bytes because it is the encrypt ICV
-    arp.wepdata = mes[:-4]
+    arp.wepdata = ciphertext[:-4]
     # Set the IV used
     arp.iv = IV
     # Put the ICV in the packet. The ICV is in the last four bytes of the encrypted message.
     # The value is also put in a little endian way to be readable
-    arp.icv = struct.unpack('!L', mes[-4:])[0]
+    arp.icv = struct.unpack('!L', ciphertext[-4:])[0]
     # Remove the RadioTap value of the length of the packet to recalculate it. If not use the packet will keep
     # the value len of the template and wireshark will not succeed to read the fragment
     arp[RadioTap].len = None
@@ -77,3 +77,6 @@ for i in range(0, NB_FRAGMENTS):  # Fragment the message
         wrpcap('arp-manual-fragmentation.cap', arp, append=False)
     else:
         wrpcap('arp-manual-fragmentation.cap', arp, append=True)
+    print("--Fragment " + str(i + 1) + "--")
+    print('Text: ' + fragments[i].hex())
+    print('Ciphertext: ' + ciphertext[:-4].hex())
